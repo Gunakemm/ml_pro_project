@@ -1,0 +1,53 @@
+{
+  "model_name": "viral-logreg",
+  "model_version": "0.1.0",
+  "trained_at": "2026-11-03T16:17:26+00:00",
+  "n_train": 8000,
+  "features": [
+    "track_name",
+    "artist",
+    "genre",
+    "release_year",
+    "duration_sec",
+    "danceability",
+    "energy",
+    "valence",
+    "tempo_bpm",
+    "acousticness",
+    "instrumentalness",
+    "speechiness",
+    "liveness",
+    "loudness_db"
+  ],
+  "numeric_cols": [
+    "release_year",
+    "duration_sec",
+    "danceability",
+    "energy",
+    "valence",
+    "tempo_bpm",
+    "acousticness",
+    "instrumentalness",
+    "speechiness",
+    "liveness",
+    "loudness_db"
+  ],
+  "categorical_cols": [
+    "track_name",
+    "artist",
+    "genre"
+  ],
+  "threshold": 0.4005,
+  "metrics_test": {
+    "ROC-AUC": 0.7932,
+    "PR-AUC": 0.6389,
+    "precision@0.5": 0.6198,
+    "recall@0.5": 0.5742,
+    "F1@0.5": 0.5961
+  },
+  "libs": {
+    "pandas": "3.1.0",
+    "scikit-learn": "1.6.1",
+    "catboost": "1.2.10"
+  }
+}
