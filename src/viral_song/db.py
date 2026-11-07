@@ -1,5 +1,6 @@
 import psycopg
 from psycopg.types.json import Json
+
 from viral_song.config import settings
 from viral_song.scheme import Prediction
 

@@ -1,5 +1,7 @@
-from pydantic import BaseModel, Field
 from typing import Any
+
+from pydantic import BaseModel, Field
+
 
 class Features(BaseModel):
     model_config = {'extra': "forbid"}

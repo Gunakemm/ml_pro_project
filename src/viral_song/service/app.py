@@ -1,10 +1,10 @@
+import logging
 import time
 import uuid
+from contextlib import asynccontextmanager
+
 import joblib
 import pandas as pd
-import logging
-
-from contextlib import asynccontextmanager
 from fastapi import BackgroundTasks, FastAPI, HTTPException
 
 from viral_song import db
