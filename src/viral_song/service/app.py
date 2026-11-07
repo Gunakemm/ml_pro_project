@@ -5,7 +5,9 @@ from contextlib import asynccontextmanager
 
 import joblib
 import pandas as pd
-from fastapi import BackgroundTasks, FastAPI, HTTPException
+from fastapi import BackgroundTasks, FastAPI, HTTPException, Request
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 
 from viral_song import db
 from viral_song.config import settings
@@ -64,3 +66,36 @@ def predict(x: Features, bg: BackgroundTasks) -> Prediction:
     )
     bg.add_task(db.save_prediction, prediction)
     return prediction
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception(request: Request, exc: RequestValidationError) -> JSONResponse:
+    body = getattr(exc, "body", {})
+    body = body if isinstance(body, dict) else {}
+
+    log.warning("Validation error on %s %s: body=%s, errors=%s",
+                request.method, request.url.path, body, exc.errors())
+
+    request_id=str(uuid.uuid4())
+
+    prediction = Prediction(
+        request_id=request_id, 
+        model_version=app.state.version,
+        features=body,
+        score=0.0,
+        viral=None,
+        latency_ms=None,
+        status_code=422
+        )
+
+    bg = BackgroundTasks()
+    bg.add_task(db.save_prediction, prediction)
+
+    return JSONResponse(
+        status_code=422,
+        content={
+            "request_id": request_id,
+            "model_version": app.state.version,
+            "detail": exc.errors()
+        },
+        background=bg
+    )

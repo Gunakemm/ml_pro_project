@@ -26,7 +26,7 @@ class Prediction(BaseModel):
     model_version: str
     request_id: str
     features: dict[str, Any]
-    score: float
-    viral: bool
-    latency_ms: float
+    score: float 
+    viral: bool | None = None
+    latency_ms: float | None = None
     status_code: int
