@@ -42,3 +42,10 @@ model-name = "viral-song"
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"
+markers = ["integration: нужна база данных - адрес в DATABASE_URL"]
+
+[tool.ruff]
+line-length = 150
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
