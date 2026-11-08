@@ -20,6 +20,7 @@ def init() -> None:
     if not settings.database_url:
         return
     with psycopg.connect(settings.database_url) as conn:
+        conn.execute("SELECT pg_advisory_xact_lock(8)")
         conn.execute(DDL)
 
 def save_prediction(prediction: Prediction) -> None:
