@@ -85,10 +85,10 @@ jobs:
           kubectl rollout status deploy/postgres --timeout=180s
 
       - name: сервис
-        run: | 
+        run: |
           kubectl apply -f k8s/
           kubectl set image deploy/viral-song-service api="$IMAGE"
-          kubectl rollout status deploy/viral-song-service --timeout=180s
+          kubectl rollout status deploy/viral-song-service --timeout=60s
       
       - name: smoke
         run: |
