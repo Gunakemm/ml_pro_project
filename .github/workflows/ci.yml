@@ -68,7 +68,7 @@ jobs:
       - uses: helm/kind-action@v1
         with: {cluster_name: ci}
       - name: образ в кластер
-        run:
+        run: |
           docker pull "$IMAGE"
           kind load docker-image "$IMAGE" --name ci
       - name: подтягиваем секреты
