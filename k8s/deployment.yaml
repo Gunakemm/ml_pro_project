@@ -20,7 +20,7 @@ spec:
             - containerPort: 8000
           envFrom:
             - configMapRef: {name: viral-song-config}
-            - secretRef: {name: viral-song-service}
+            - secretRef: {name: viral-song-secrets}
           startupProbe:
             httpGet: {path: /health, port: 8000}
             failureThreshold: 30
