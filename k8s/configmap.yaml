@@ -4,4 +4,4 @@ metadata:
   name: viral-song-config
 data:
   LOG_LEVEL: "INFO"
-  MODEL_PATH: "artifacts/logreg_model.joblib"
+  MODEL_PATH: "artifacts/grabage_model.joblib"
