@@ -73,7 +73,7 @@ jobs:
           kind load docker-image "$IMAGE" --name ci
       - name: подтягиваем секреты
         env:
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD1 }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: |
           kubectl create secret generic viral-song-secrets \
           --from-literal=POSTGRES_PASSWORD="$DB_PASSWORD" \
