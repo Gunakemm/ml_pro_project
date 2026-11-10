@@ -1,4 +1,4 @@
-import oss
+import os
 
 import psycopg
 import pytest
