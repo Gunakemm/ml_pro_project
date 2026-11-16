@@ -24,6 +24,7 @@ def test_prediction_is_logged(client, good_row):
         assert row[0] == body["model_version"]
         assert row[1] == pytest.approx(body["score"])
         assert row[2] == str(good_row["valence"])
+        assert row[3] == 200
 
 def test_garbage_request(client, good_row):
     request = client.post("/v1/predict", json={**good_row, "release_year": 3026})
