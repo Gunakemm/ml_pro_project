@@ -1,4 +1,6 @@
 import joblib
+import mlflow
+from mlflow import MlflowClient
 
 from viral_song.config import settings
 
@@ -8,9 +10,6 @@ def load_model() -> tuple[object, dict, str]:
     if not settings.model_name:
         bundle = joblib.load(settings.model_path)
         return bundle["pipeline"], bundle["metadata"], bundle["metadata"]["model_version"]
-
-    import mlflow
-    from mlflow import MlflowClient
 
     mlflow.set_tracking_uri(settings.mlflow_tracking_uri)
     mv = MlflowClient().get_model_version_by_alias(settings.model_name, settings.model_alias)
