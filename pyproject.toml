@@ -13,7 +13,11 @@ dependencies = [
     "scikit-learn >=1.6, <1.7",
     "joblib",
     "psycopg[binary]",
-    "catboost"
+    "catboost",
+    "mlflow-skinny>=3.16,<4",
+    "skops>=0.16.0",
+    "prometheus-client>=0.21",
+    "prometheus-fastapi-instrumentator>=8",
 ]
 
 [dependency-groups]

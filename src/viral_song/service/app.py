@@ -11,6 +11,7 @@ from fastapi.responses import JSONResponse
 
 from viral_song import db
 from viral_song.config import settings
+from viral_song.model_store import load_model
 from viral_song.scheme import Features, Prediction
 
 logging.basicConfig(level=logging.INFO,
@@ -19,10 +20,7 @@ log = logging.getLogger("viral_song")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    bundle = joblib.load(settings.model_path)
-    app.state.pipeline = bundle["pipeline"]
-    app.state.meta = bundle["metadata"]
-    app.state.version = bundle["metadata"]["model_version"]
+    app.state.pipeline, app.state.meta, app.state.version = load_model()
 
     db.init()
     yield
