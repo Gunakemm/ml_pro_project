@@ -74,7 +74,7 @@ def precision_recall_curve_plot(precision: np.ndarray, recall: np.ndarray):
     ax.set_xlabel('Recall')
     ax.set_ylabel('Precision')
     ax.set_title('Precision-Recall Curve')
-    ax.legend(loc="top right")
+    ax.legend(loc="upper right")
     return fig
 
 def confusion_matrix_plot(y_true, y_pred):
