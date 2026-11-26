@@ -2,7 +2,10 @@ import json
 import os
 from pathlib import Path
 
+import hashlib
+import matplotlib.pyplot as plt
 import mlflow
+import numpy as np
 import pandas as pd
 import sklearn
 from mlflow import MlflowClient
@@ -10,7 +13,14 @@ from mlflow.exceptions import MlflowException
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import average_precision_score, precision_recall_curve, roc_auc_score
+from sklearn.metrics import (
+    average_precision_score, 
+    precision_recall_curve, 
+    roc_auc_score, 
+    auc,
+    confusion_matrix,
+    ConfusionMatrixDisplay
+)
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
@@ -56,6 +66,26 @@ def champion_auc(client: MlflowClient) -> tuple[str | None, float | None]:
         return None, None
     return mv.version, client.get_run(mv.run_id).data.metrics.get("roc_auc")
 
+def precision_recall_curve_plot(precision: np.ndarray, recall: np.ndarray):
+    pr_auc = auc(recall, precision)
+
+    fig, ax = plt.subplots(figsize=(8, 6))
+    ax.plot(recall, precision, label=f'PR curve (AUC = {pr_auc:.2f})', color="#A81E17")
+    ax.set_xlabel('Recall')
+    ax.set_ylabel('Precision')
+    ax.set_title('Precision-Recall Curve')
+    ax.legend(loc="top right")
+    return fig
+
+def confusion_matrix_plot(y_true, y_pred):
+    cm = confusion_matrix(y_true, y_pred)
+
+    fig, ax = plt.subplots(figsize=(6, 6))
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=["Negative", "Positive"])
+    disp.plot(ax=ax, cmap="Blues", colorbar=False)
+    ax.set_title("Confusion Matrix")
+    return fig
+
 def main() -> dict:
     df = load_and_validate(DATA_PATH)
     features = NUMERIC + CATEGORICAL
@@ -67,16 +97,23 @@ def main() -> dict:
     proba = pipeline.predict_proba(x_test)[:, 1]
     auc = float(roc_auc_score(y_test, proba))
     precision, recall, thresholds = precision_recall_curve(y_test, proba)
-    thresholds = float(thresholds[recall[:-1] >= 0.70].max())
+    threshold = float(thresholds[recall[:-1] >= 0.70].max())
+    y_pred = (proba > threshold).astype(int)
+
+    pr_curve_plot = precision_recall_curve_plot(precision, recall)
+    cm_plot = confusion_matrix_plot(y_test, y_pred)
 
     mlflow.set_experiment(EXPERIMENT)
     client = MlflowClient()
     with mlflow.start_run() as run:
-        metadata = {"features": features, "threshold": round(thresholds, 4), "n_train": len(x_train),
+        metadata = {"features": features, "threshold": round(threshold, 4), "n_train": len(x_train),
                     "data_rows": len(df), "sklearn": sklearn.__version__}
         mlflow.log_params({"C": C, "model": "LogisticRegression", "seed": SEED, "data": str(DATA_PATH)})
-        mlflow.log_metrics({"roc_auc": auc, "pr_auc": float(average_precision_score(y_test, proba)), "threshold": thresholds})
+        mlflow.log_param("data_md5", hashlib.md5(DATA_PATH.read_bytes()).hexdigest())
+        mlflow.log_metrics({"roc_auc": auc, "pr_auc": float(average_precision_score(y_test, proba)), "threshold": threshold})
         mlflow.log_dict(metadata, "metadata.json")
+        mlflow.log_figure(pr_curve_plot, "plots/precision_recall_curve.png")
+        mlflow.log_figure(cm_plot, "plots/confusion_matrix.png")
         info = mlflow.sklearn.log_model(pipeline, name="model", registered_model_name=MODEL_NAME,
                                         skops_trusted_types=SKOPS_TRUSTED)
         version = info.registered_model_version
