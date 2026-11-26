@@ -1,8 +1,8 @@
 import joblib
-
-from viral_song.config import settings
 import mlflow
 from mlflow import MlflowClient
+
+from viral_song.config import settings
 
 
 def load_model() -> tuple[object, dict, str]:

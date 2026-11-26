@@ -1,8 +1,8 @@
+import hashlib
 import json
 import os
 from pathlib import Path
 
-import hashlib
 import matplotlib.pyplot as plt
 import mlflow
 import numpy as np
@@ -13,14 +13,7 @@ from mlflow.exceptions import MlflowException
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import (
-    average_precision_score, 
-    precision_recall_curve, 
-    roc_auc_score, 
-    auc,
-    confusion_matrix,
-    ConfusionMatrixDisplay
-)
+from sklearn.metrics import ConfusionMatrixDisplay, auc, average_precision_score, confusion_matrix, precision_recall_curve, roc_auc_score
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
