@@ -3,14 +3,12 @@ import time
 import uuid
 from contextlib import asynccontextmanager
 
-import joblib
 import pandas as pd
 from fastapi import BackgroundTasks, FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
 from viral_song import db
-from viral_song.config import settings
 from viral_song.model_store import load_model
 from viral_song.scheme import Features, Prediction
 

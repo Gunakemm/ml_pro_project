@@ -23,7 +23,10 @@ MIN_GAIN = float(os.getenv("GATE_MIN_GAIN", "0.0"))
 SEED = 42
 SKOPS_TRUSTED = ["numpy.dtype", "sklearn.compose._column_transformer._RemainderColsList"]
 
-NUMERIC = ['release_year', 'duration_sec', 'danceability', 'energy', 'valence', 'tempo_bpm', 'acousticness', 'instrumentalness', 'speechiness', 'liveness', 'loudness_db']
+NUMERIC = [
+    'release_year', 'duration_sec', 'danceability', 'energy', 'valence', 'tempo_bpm', 
+    'acousticness', 'instrumentalness', 'speechiness', 'liveness', 'loudness_db'
+]
 CATEGORICAL = ['track_name', 'artist', 'genre']
 
 def load_and_validate(path: Path) -> pd.DataFrame:
