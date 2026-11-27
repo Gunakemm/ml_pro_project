@@ -1,14 +1,14 @@
 import json
-import os
-from locust import HttpUser, task, between
+
+from locust import HttpUser, between, task
 
 GOOD_PAYLOAD = {}
 try:
     # Ищем good.json в текущей директории
-    with open("good.json", "r", encoding="utf-8") as f:
+    with open("good.json", encoding="utf-8") as f:
         GOOD_PAYLOAD = json.load(f)
 except FileNotFoundError:
-    raise("Файл good.json не найден в текущей директории")
+    print("Файл good.json не найден в текущей директории")
 
 
 class ViralSongUser(HttpUser):
