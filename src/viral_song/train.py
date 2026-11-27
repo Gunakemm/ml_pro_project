@@ -19,7 +19,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 DATA_PATH = Path(os.getenv("DATA_PATH", "datasets/viral_songs.csv"))
-MODEL_NAME = os.getenv("MODEL_NAME", "viral_songs")
+MODEL_NAME = os.getenv("MODEL_NAME", "viral-songs")
 EXPERIMENT = os.getenv("MLFLOW_EXPERIMENT", "viral_songs")
 C = float(os.getenv("C", "1.0"))
 MIN_GAIN = float(os.getenv("GATE_MIN_GAIN", "0.0"))
